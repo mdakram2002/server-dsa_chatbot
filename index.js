@@ -20,23 +20,10 @@ connectDB();
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// Debug all incoming requests
-// app.use((req, res, next) => {
-//   console.log('=== INCOMING REQUEST ===');
-//   console.log('Method:', req.method);
-//   console.log('URL:', req.url);
-//   console.log('Path:', req.path);
-//   console.log('Original URL:', req.originalUrl);
-//   console.log('Timestamp:', new Date().toISOString());
-//   console.log('========================');
-//   next();
-// });
-
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/user", userRoutes);
-
 
 app.get("/api/health", (req, res) => {
   res.json({
@@ -46,13 +33,10 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Serve static files in production
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("../build"));
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../build", "index.html"));
-  });
-}
+// Remove the production static file serving since client is separate
+// if (process.env.NODE_ENV === "production") {
+//   // Client is deployed separately, no need to serve static files
+// }
 
 // Error handling middleware
 app.use(errorHandler);
